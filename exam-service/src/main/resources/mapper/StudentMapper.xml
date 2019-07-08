@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cheer.exam.dao.StudentMapper">
+<select id="getStudentOne" resultType="com.cheer.exam.model.Student">
+    select * from studentinfo where ecn=#{ecn};
+</select>
+
+<update id="upDateStudnet">
+        update studentinfo
+        <trim prefix="set" suffixOverrides=",">
+            <if test="yes!=null">
+                yes=#{yes},
+            </if>
+            <if test="no!=null">
+                no=#{no},
+            </if>
+            <if test="score!=null">
+                score=#{score},
+            </if>
+            <if test="qualified!=null">
+                qualified=#{qualified}
+            </if>
+        </trim>
+        where ecn=#{ecn}
+</update>
+</mapper>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>考试界面</title>
+    <style>
+        .info {
+            float: left;
+            margin-left: 50px;
+            margin-top: 70px;
+        }
+
+        table {
+            border: 1px solid black;
+            width: 200px;
+            height: 350px;
+        }
+
+        button {
+            width: 100px;
+            height: 34px;
+            border-radius: 12px;
+            border-width: 0;
+            background-color: blue;
+        }
+
+        #before {
+            margin-left: 150px;
+        }
+
+        #next {
+            margin-left: 20px;
+        }
+
+        #submission {
+            margin-left: 20px;
+        }
+
+        .question {
+            margin-top: 200px;
+            margin-left: 300px;
+            width: 600px;
+            height: 100px;
+        }
+
+        #A, #B, #C, #D {
+            width: 200px;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+
+<div class="info">
+    <table>
+        <tr>
+            <td>
+                <div>
+                    <label style="color: red">考生信息</label>
+                </div>
+                <div>
+                    <label>考生姓名：王晓</label>
+                </div>
+                <div>
+                    <label>考试题目：20道</label>
+                </div>
+                <div>
+                    <label>考试时间：15分钟</label>
+                </div>
+                <div>
+                    <label>合格标准：满分100分，90分及格</label>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="question">
+    <label id="title"></label><br><!--题目头-->
+    <input type="radio" name="ans" value="A" id="A"><label for="A"></label><br><!--第一个答案-->
+    <input type="radio" name="ans" value="B" id="B"><label for="B"></label><br>
+    <input type="radio" name="ans" value="C" id="C"><label for="C"></label><br>
+    <input type="radio" name="ans" value="D" id="D"><label for="D"></label><br>
+
+    <div>
+        <label><h4 id="a0"></h4></label>
+    </div>
+    <!--翻页按钮-->
+    <div>
+        <button id="before">上一题</button>
+        <button id="next" name="">下一题</button>
+        <button id="submission">交卷</button>
+    </div>
+</div>
+
+
+<script>
+    let num = 0;//定义题目顺序变量
+    let check = new Array();//定义数组存放学生选中的选项值
+    let url="questionList1";
+    $(function () {
+        $.ajax({
+            url: url,
+            method: "GET",
+            dataType: "json",
+            success: function (response) {//先显示第一题
+                a(response, num);
+
+            }
+
+        });
+
+
+        $("#submission").click(function () {//提交题目
+            if ($("#A").prop("checked")) {//如果第N题目某个选项被选中就把选项的值保存在check数组里 点击下一页的时候会
+                check[num] = $("#A").val();//num++所以存储答案的check数组下标会+1
+            } else if ($("#B").prop("checked")) {
+                check[num] = $("#B").val();
+            } else if ($("#C").prop("checked")) {
+                check[num] = $("#C").val();
+            } else if ($("#D").prop("checked")) {
+                check[num] = $("#D").val();
+            }
+
+
+            $.ajax({
+                url: "answerResult",//访问服务器资源需要加虚拟目录
+                data: {
+                    "answer": check //把答案数组通过ajax的url传到servlet处理
+                },
+                async: false,//设置ajax同步操作，本ajax没有返回值前其他用户其他操作必须等待这个ajax请求完成才能运行
+                dataType: "json",
+                type: "GET",
+                traditional: true,
+                success: function (response) {
+                    if (response != null) {
+                        window.location.href = "result";
+                    }
+                }
+            });
+        });
+
+
+
+        //上一题按钮
+        $("#before").click(function () {
+            $("#next").removeAttr("disabled");
+
+            $.ajax({
+                url: url,
+                method: "GET",
+                dataType: "json",
+                success: function (reponse) {
+                    //禁用答案
+                    $("input[type='radio']").attr("disabled", "disabled");//attr是指节点的属性,是attribute的缩写,
+
+
+                    if (num === 0) {
+                        return;
+                    }
+
+                    num--;
+                    a(reponse, num);
+
+                    if (check[num] == null) {//如果这题没选就解锁
+                        $("input[type='radio']").removeAttr("disabled");
+                    }
+                    if ("A" == check[num]) {//显示上一题选了什么
+                        $("#A").prop('checked', 'checked');
+
+                    } else if ("B" == check[num]) {
+                        $("#B").prop('checked', 'checked');
+
+                    } else if ("C" == check[num]) {
+                        $("#C").prop('checked', 'checked');
+
+                    } else if ("D" == check[num]) {
+                        $("#D").prop('checked', 'checked');
+
+                    }
+                    $("input[type='radio']").attr("disabled", "disabled");
+                }
+
+            });
+        });
+        //下一页按钮
+        $("#next").click(function () {
+
+            $("#before").attr("disabled", false);//移除上一页按钮的锁定状态
+
+
+            Preservation(num)//存储学生答题选项
+
+            $("input[type='radio']").prop("checked", "");
+
+            $.ajax({
+                url: url,
+                method: "GET",
+                dataType: "json",
+                success: function (response) {
+                    if (num === response.length - 1) {
+                        $("#next").attr("disabled", "disabled");
+
+                        return;
+                    }
+
+                    num++;
+                    a(response, num);
+                    if (check[num] == null) {
+                        $("input[type='radio']").removeAttr("disabled");//点击下一题后移除选择按钮的选中状态
+                    }
+
+                    if ("A" == check[num]) {//如果下一页选过了就显示某个选项
+                        $("#A").prop('checked', 'checked');
+
+                    } else if ("B" == check[num]) {
+                        $("#B").prop('checked', 'checked');
+
+                    } else if ("C" == check[num]) {
+                        $("#C").prop('checked', 'checked');
+
+                    } else if ("D" == check[num]) {
+                        $("#D").prop('checked', 'checked');
+
+                    }
+
+
+                }
+            });
+        });
+    });
+
+    function a(response, num) {//显示题的方法
+        $("#title").html(response[num]["question"]);
+        $("label[for='A']").html(response[num]["a"]);
+        $("label[for='B']").html(response[num]["b"]);
+        $("label[for='C']").html(response[num]["c"]);
+        $("label[for='D']").html(response[num]["d"]);
+    }
+
+    function Preservation() {
+        if ($("#A").prop("checked")) {
+            check[num] = $("#A").val();
+        } else if ($("#B").prop("checked")) {
+            check[num] = $("#B").val();
+        } else if ($("#C").prop("checked")) {
+            check[num] = $("#C").val();
+        } else if ($("#D").prop("checked")) {
+            check[num] = $("#D").val();
+        }
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>成绩显示</title>
+    <style>
+        table {
+            margin: 50px auto 0 auto;
+            border-collapse: collapse;
+            text-align: center;
+            vertical-align: center;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            width: 100px;
+            height: 30px;
+        }
+
+        h2{
+           color: red; 
+        }
+    </style>
+</head>
+<body>
+<div>
+
+    <h2 align="center">考试成绩单</h2>
+</div>
+<table>
+    <tr>
+        <th>准考证号</th>
+        <th>答对</th>
+        <th>答错</th>
+        <th>分数</th>
+        <th>是否合格</th>
+    </tr>
+    <tr>
+        <td th:text="${student.ecn}"></td>
+        <td th:text="${student.yes}"></td>
+        <td th:text="${student.no}"></td>
+        <td th:text="${student.score}"></td>
+        <td th:text="${student.qualified}"></td>
+    </tr>
+    </table>
+
+</body>
+</html>

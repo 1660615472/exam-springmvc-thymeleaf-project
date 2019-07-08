@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆页面</title>
+    <style>
+       h1{
+           font-size:40px
+        }
+        h5{
+            font-weight:normal;font-size:13px;
+            margin-top: 300px;
+        }
+
+        body{
+       text-align:center;
+        }
+        .adminButton+.studentButtom{
+            margin-top:150px ;
+
+        }
+        .adminButton+.studentButtom{
+            margin-left: 20px;
+
+        }
+
+       button {
+           width: 120px;
+           height: 34px;
+           border-radius: 12px;
+           border-width: 0;
+           background-color:royalblue;
+       }
+
+        .row1+.row2{
+            margin-top:70px ;
+        }
+
+        h1+.row1{
+            margin-top: 40px;
+        }
+
+
+    </style>
+</head>
+<body>
+<h1 style="text-align:center">江苏2018年小客车科目四考试</h1>
+
+    <div class="row1">
+    <form action="adminLogin" method="GET" id="adminLogin">
+    <button class="adminButton" type="submit">管理员登陆</button>
+    </form>
+    </div>
+
+    <div class="row2">
+    <form action="studentLogin" method="GET" id="studentLogin">
+    <button class="studentButtom" type="submit">学生登陆</button>
+    </form>
+    </div>
+
+
+
+<DIV>
+    <H5>其然软件 Copyright© 2018</H5>
+</DIV>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+</body>
+</html>

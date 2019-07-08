@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>考生登陆界面</title>
+    <style>
+        button {
+            position: relative;
+            left: 105px;
+            width: 120px;
+            height: 34px;
+            border-radius: 12px;
+            border-width: 0;
+            background-color: royalblue;
+        }
+        body{
+            text-align:center;
+        }
+
+        #form{
+            margin: 100px auto 0px auto;
+        }
+
+        input{
+            width:300px;
+            height: 20px;
+        }
+        button{
+            margin-top:50px ;
+            left: 550px;
+            float: left;
+        }
+
+    </style>
+</head>
+<body>
+<h1 style="text-align:center">江苏2018年小客车科目四考试</h1>
+<div id="form">
+    <form action="studentLogin" method="post">
+        <div class="row">
+            <label for="ecn">准考证号</label>
+            <input type="text" name="ecn" id="ecn">
+        </div>
+        <div class="row1">
+            <label for="password">密码</label>
+            <input type="password" name="password" id="password">
+        </div>
+        <div class="row">
+            <button type="reset">重置</button><button id="register">登陆</button>
+        </div>
+    </form>
+</body>
+</html>
